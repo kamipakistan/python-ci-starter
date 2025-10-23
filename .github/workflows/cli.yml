@@ -1,32 +1,33 @@
 name: Python application test with GitHub Action
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: set up Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.10
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: |
-        make install
-        
-    - name: Lint with pylint
-      run: |
-        make lint
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          architecture: 'x64'
 
-    - name: Test with pytest
-      run: |
-        make test
+      - name: Install dependencies
+        run: |
+          make install
 
-    - name: Format the code
-      run: |
-        make format
-      
+      - name: Lint with pylint
+        run: |
+          make lint
+
+      - name: Run tests with pytest
+        run: |
+          make test
+
+      - name: Format code with Black
+        run: |
+          make format
